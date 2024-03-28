@@ -4,14 +4,17 @@ var userModel = require('../schemas/user')
 var ResHand = require('../helper/ResHandle')
 var { validationResult } = require('express-validator');
 var checkUser = require('../validators/user')
+var protect = require('../middlewares/protect')
 
 
-router.get('/', async function (req, res, next) {
-  let users = await userModel.find({}).exec();
-  ResHand(res, true, users);
-});
 
-router.get('/:id', async function (req, res, next) {
+router.get('/', protect, async function (req, res, next) {
+    console.log(req.headers);
+    let users = await userModel.find({}).exec();
+    ResHand(res, true, users);
+  });
+
+router.get('/:id',protect, async function (req, res, next) {
   try {
     let user = await userModel.find({ _id: req.params.id }).exec();
     ResHand(res, true, user);
