@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var bookModel = require('../schemas/book')
-var authorModel = require('../schemas/author')
+require('express-async-errors')
+
+
 router.get('/', async function (req, res, next) {
   let limit = req.query.limit ? req.query.limit : 5;
   let page = req.query.page ? req.query.page : 1;
@@ -36,12 +38,8 @@ router.get('/', async function (req, res, next) {
   res.status(200).send(books);
 });
 router.get('/:id', async function (req, res, next) {
-  try {
-    var book = await bookModel.findById(req.params.id).exec();
-    res.status(200).send(book);
-  } catch (error) {
-    res.status(404).send(error);
-  }
+  var book = await bookModel.findById(req.params.id).exec();
+  res.status(200).send(book);
 });
 
 router.post('/', async function (req, res, next) {

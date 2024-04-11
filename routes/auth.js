@@ -9,9 +9,17 @@ var protect = require('../middlewares/protect')
 var sendMail = require('../helper/sendmail')
 
 
-
-
-
+router.post('/changepassword', protect, async function (req, res, next) {
+  if(bcrypt.compareSync(req.body.oldpassword,req.user.password)){
+    let  user = req.user;
+    user.password = req.body.newpassword;
+    await user.save();
+    ResHand(res, true, "cap nhat thanh cong");
+  }else{
+    ResHand(res, false, "oldpassword sai");
+    return;
+  }
+});
 
 router.get('/me', protect, async function (req, res, next) {
   ResHand(res, true, req.user);
